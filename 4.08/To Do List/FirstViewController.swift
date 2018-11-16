@@ -12,10 +12,10 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBOutlet var table: UITableView!
 
-    var jobOffers: [JobOffer] = []
+    var jobOffers: [String] = []
 
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
+        sortJobOffers()
         return jobOffers.count
         
     }
@@ -24,19 +24,21 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
-        
+        cell.textLabel?.numberOfLines = 0
+        cell.textLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
         //TODO: put the contents of the job offer object to a cell
+        sortJobOffers()
         let offer = jobOffers[indexPath.row]
-        var information: String = ""
-        information += "Name\t" + offer.companyName + "\n"
-        information += "City\t" + offer.city + "\n"
-        information += "State\t" + offer.state + "\n"
-        information += "Country\t" + offer.country + "\n"
-        information += "Salary\t" + String(offer.salary) + "\n"
-        information += "401K % Match\t" + String(offer.match401K) + "\n"
-        information += "Additional Benefits\t" + String(offer.additionalBenefits)
+//        var information: String = ""
+//        information += "Name\t" + offer.companyName + "\n"
+//        information += "City\t" + offer.city + "\n"
+//        information += "State\t" + offer.state + "\n"
+//        information += "Country\t" + offer.country + "\n"
+//        information += "Salary\t" + String(offer.salary) + "\n"
+//        information += "401K % Match\t" + String(offer.match401K) + "\n"
+//        information += "Additional Benefits\t" + String(offer.additionalBenefits)
         
-        cell.textLabel?.text = "Test"
+        cell.textLabel?.text = offer
         
         return cell
         
@@ -47,9 +49,8 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-       
-        
+        table.rowHeight = UITableViewAutomaticDimension
+        table.estimatedRowHeight = 200
     }
     
     
@@ -57,7 +58,7 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let itemsObject = UserDefaults.standard.object(forKey: "JobOffers")
         
         
-        if let tempItems = itemsObject as? [JobOffer] {
+        if let tempItems = itemsObject as? [String] {
             
             jobOffers = tempItems
             
@@ -66,11 +67,35 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         table.reloadData()
     }
     
+    func getSalary(offer: String) -> Int{
+        var i = 1
+        while Int(offer.suffix(i)) != nil{
+            i += 1
+        }
+        return Int(offer.suffix(i-1))!
+    }
+    
+    func sortJobOffers(){
+        if jobOffers.count < 1{
+            return
+        }
+        for i in 0..<jobOffers.count - 1{
+            for j in 0..<jobOffers.count - i - 1{
+                if getSalary(offer: jobOffers[j]) < getSalary(offer: jobOffers[j+1]){
+                    let temp = jobOffers[j];
+                    jobOffers[j] = jobOffers[j+1];
+                    jobOffers[j+1] = temp;
+                }
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == UITableViewCellEditingStyle.delete {
             
             jobOffers.remove(at: indexPath.row)
+            sortJobOffers()
             
             table.reloadData()
             
