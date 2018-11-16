@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "main:AppDelegate.swift">
+      </ContextState>
+      <ContextState
+         contextName = "SecondViewController.add(_:):SecondViewController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "FirstViewController.viewDidAppear(_:):FirstViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "let tempItems = itemsObject as? [JobOffer]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
